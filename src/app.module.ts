@@ -6,12 +6,13 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { SongsController } from './songs/songs.controller';
 import { DevConfigService } from './common/providers/DevConfigService';
 import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
 
 @Module({
-  imports: [SongsModule, DatabaseModule],
+  imports: [SongsModule, ConfigModule.forRoot(), DatabaseModule],
   controllers: [AppController],
   providers: [AppService,
     {
@@ -36,4 +37,5 @@ export class AppModule {
 
     consumer.apply(LoggerMiddleware).forRoutes(SongsController); // opt 3
   }
+  
 }
