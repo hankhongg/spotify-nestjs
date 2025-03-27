@@ -4,11 +4,26 @@ import { AppService } from './app.service';
 import { SongsModule } from './songs/songs.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { SongsController } from './songs/songs.controller';
+import { DevConfigService } from './common/providers/DevConfigService';
+
+const devConfig = {port: '400'}
+const prodConfig = {port: '500'}
 
 @Module({
   imports: [SongsModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: 'CONFIG',
+      useFactory: () => {
+        return process.env.NODE_ENV === 'development' ? devConfig : prodConfig;
+      }
+    },
+    {
+      provide: DevConfigService,
+      useClass: DevConfigService, // use Class
+    }
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

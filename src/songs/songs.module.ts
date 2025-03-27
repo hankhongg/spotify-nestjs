@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
 import { SongsController } from './songs.controller';
 import { SongsService } from './songs.service';
+import { connection } from 'src/common/constants/connection';
 
 @Module({
   controllers: [SongsController],
-  providers: [SongsService]
+  providers: [SongsService,
+    {
+      provide: 'CONNECTION',
+      useValue: connection, // declare this to use inside the song service
+    }
+  ]
 })
 export class SongsModule {}

@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { Connection } from 'src/common/constants/connection';
 
 @Injectable()
 export class SongsService {
     // local db
     // local array
+    @Inject('CONNECTION')
+    private SongService(connection: Connection){
+        console.log(connection);
+    }
 
     private readonly songs: any[] = [];
 
-    create(song) {
-        this.songs.push(song);
-        return song;
+    create(createSongDTO) {
+        this.songs.push(createSongDTO);
+        return createSongDTO;
     }
 
     findAll() {
