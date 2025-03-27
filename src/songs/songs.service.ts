@@ -5,10 +5,6 @@ import { Connection } from 'src/common/constants/connection';
 export class SongsService {
     // local db
     // local array
-    @Inject('CONNECTION')
-    private SongService(connection: Connection){
-        console.log(connection);
-    }
 
     private readonly songs: any[] = [];
 

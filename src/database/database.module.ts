@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { config } from 'process';
+import { Song } from 'src/songs/song.entity';
 
 @Module({
   imports: [
@@ -11,15 +12,14 @@ import { config } from 'process';
       inject: [ConfigService], // use config service
       useFactory: async (configService: ConfigService) => {
         return {
-          type: 'mongodb',
-          url: configService.get<string>('DATABASE_URL'),
-          port: configService.get<number>('DATABASE_PORT'),
-          username: configService.get<string>('DATABASE_USER'),
-          password: configService.get<string>('DATABASE_PASSWORD'),
-          database: configService.get<string>('DATABASE_NAME'),
-          entities: [],
+          type: 'postgres',
+          host: configService.get('DATABASE_HOST'),
+          port: configService.get('DATABASE_PORT'),
+          username: configService.get('DATABASE_USERNAME'),
+          password: configService.get('DATABASE_PASSWORD'),
+          database: configService.get('DATABASE_NAME'),
+          entities: [Song],
           synchronize: true,
-          autoLoadEntities: true,
         };
       }
     })
@@ -35,5 +35,5 @@ export class DatabaseModule implements OnModuleInit {
     } else {
       console.error('Database connection is NOT established.');
     }
-  }
+}
 }
