@@ -5,12 +5,13 @@ import { SongsModule } from './songs/songs.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { SongsController } from './songs/songs.controller';
 import { DevConfigService } from './common/providers/DevConfigService';
+import { DatabaseModule } from './database/database.module';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
 
 @Module({
-  imports: [SongsModule],
+  imports: [SongsModule, DatabaseModule],
   controllers: [AppController],
   providers: [AppService,
     {
