@@ -1,6 +1,8 @@
 import { Optional } from "@nestjs/common";
+import { IsOptional } from "class-validator";
 import { Artist } from "src/artists/entities/artist.entity";
-import { Column, Entity, JoinTable, ManyToMany, ObjectIdColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Playlist } from "src/playlists/entities/playlist.entity";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, ObjectIdColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('songs')
 export class Song{
@@ -23,4 +25,8 @@ export class Song{
     @ManyToMany(() => Artist, (artist) => artist.songs, {cascade: true}) // many to many relationship with artist entity
     @JoinTable({name: "songs_artists"}) // this will create a join table to store the relationship
     artists: Artist[]; // this is the foreign key to the artist table
+
+    @ManyToOne(() => Playlist, (playlist) => playlist.songs) // many to one relationship with playlist entity
+    @JoinColumn()
+    playlist: Playlist; // this is the foreign key to the playlist table
 }

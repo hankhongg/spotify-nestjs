@@ -8,6 +8,7 @@ import { UpdateSongDTO } from './dto/update-song-dto';
 import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { Artist } from 'src/artists/entities/artist.entity';
 import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
+import { Playlist } from 'src/playlists/entities/playlist.entity';
 
 @Injectable()
 export class SongsService {
@@ -19,6 +20,8 @@ export class SongsService {
     private readonly songRepository: Repository<Song>;
     @InjectRepository(Artist)
     private readonly artistRepository: Repository<Artist>; // inject the artist repository
+    @InjectRepository(Playlist)
+    private readonly playlistRepository: Repository<Playlist>; // inject the playlist repository
 
 
     async create(songDTO : CreateSongDTO) : Promise<Song> { // dùng async để gọi hàm bất đồng bộ trả await nhưng vẫn là promise
@@ -30,7 +33,10 @@ export class SongsService {
         song.lyrics = songDTO.lyrics;    
         // save the song to the database
         const artists = await this.artistRepository.findByIds(songDTO.artists); // create the artists from the DTO
+        if (!artists) throw new Error(`Artists with ids ${songDTO.artists} not found`); // if not found, throw an error
         song.artists = artists; // set the artists to the song
+        const playlist = await this.playlistRepository.findOne({where: {id: songDTO.playlist}}); // find the playlist by id
+        if (playlist) song.playlist = playlist; // if found, set the playlist to the song
         return await this.songRepository.save(song); // save the song to the database
     }
 

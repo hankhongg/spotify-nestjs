@@ -18,12 +18,13 @@ export class ArtistsService {
     // search for user by id first
     // if user not found, return null
     // if user found, create a new artist and save it to the database
-    const user = await this.userRepository.findOneBy({ id: createArtistDto.userId }); // find the user by id
+    const user = await this.userRepository.findOneBy({ id: createArtistDto.user }); // find the user by id
     if (!user) {
-      throw new NotFoundException(`User with id ${createArtistDto.userId} not found`); // if user not found, throw an exception
+      throw new NotFoundException(`User with id ${createArtistDto.user} not found`); // if user not found, throw an exception
     }
     const artist = new Artist(); // create a new artist object
     artist.user = user; // set the user to the artist
+    artist.artistName = createArtistDto.artistName; // set the name to the artist
     return await this.artistRepository.save(artist); // save the artist to the database
   }
 

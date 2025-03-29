@@ -2,6 +2,7 @@ import { IsInt, IsNotEmpty } from "class-validator";
 
 export class CreateArtistDto {
     @IsNotEmpty()
-    @IsInt()
-    readonly userId: number; // id của user, không phải tên user
+    readonly user: number; // id của user, không phải tên user
+    @IsNotEmpty()
+    readonly artistName: string; // tên artist
 }

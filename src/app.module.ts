@@ -9,12 +9,14 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
+import { AuthModule } from './auth/auth.module';
+import { PlaylistsModule } from './playlists/playlists.module';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
 
 @Module({
-  imports: [SongsModule, ConfigModule.forRoot(), DatabaseModule, UsersModule, ArtistsModule],
+  imports: [SongsModule, ConfigModule.forRoot(), DatabaseModule, UsersModule, ArtistsModule, AuthModule, PlaylistsModule],
   controllers: [AppController],
   providers: [AppService,
     {

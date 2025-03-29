@@ -6,6 +6,7 @@ import { config } from 'process';
 import { Song } from 'src/songs/song.entity';
 import { Artist } from 'src/artists/entities/artist.entity';
 import { User } from 'src/users/entities/user.entity';
+import { Playlist } from 'src/playlists/entities/playlist.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { User } from 'src/users/entities/user.entity';
           username: configService.get('DATABASE_USERNAME'),
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE_NAME'),
-          entities: [Song, Artist, User],
+          entities: [Song, Artist, User, Playlist],
           synchronize: true,
         };
       }

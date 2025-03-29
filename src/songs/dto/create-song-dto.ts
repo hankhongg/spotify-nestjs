@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsDateString, IsMilitaryTime, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsDateString, IsMilitaryTime, IsNumber, IsOptional } from 'class-validator';
 import { Artist } from 'src/artists/entities/artist.entity';
 export class CreateSongDTO{
     @IsString()
@@ -29,4 +29,8 @@ export class CreateSongDTO{
 
     @IsString()
     readonly lyrics: string;
+
+    @IsOptional()
+    @IsNumber()
+    readonly playlist: number; // id của playlist, không phải tên playlist
 }

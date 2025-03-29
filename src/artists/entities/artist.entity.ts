@@ -1,11 +1,17 @@
+import { IsNotEmpty, IsString } from "class-validator";
 import { Song } from "src/songs/song.entity";
 import { User } from "src/users/entities/user.entity";
-import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('artists') // this is the name of the table in the database
 export class Artist {
     @PrimaryGeneratedColumn()
     id: number;
+
+    @Column()
+    @IsString()
+    @IsNotEmpty()
+    artistName: string; // the name of the artist
 
     @OneToOne(() => User)
     @JoinColumn() // this will create a foreign key in the artist table

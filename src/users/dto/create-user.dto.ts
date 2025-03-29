@@ -1,18 +1,18 @@
-import { IsOptional } from "class-validator";
+import { IsNotEmpty, IsOptional } from "class-validator";
 import { Column, PrimaryGeneratedColumn } from "typeorm";
 
 export class CreateUserDto {
-    @IsOptional()
+    @IsNotEmpty()
     @Column()
-    firstName: string;
-    @IsOptional()
+    readonly firstName: string;
+    @IsNotEmpty()
     @Column()
     
-    lastName: string;
-    @IsOptional()
+    readonly lastName: string;
+    @IsNotEmpty()
     @Column()
-    email: string;
-    @IsOptional()
+    readonly email: string;
+    @IsNotEmpty()
     @Column()
     password: string;
 }

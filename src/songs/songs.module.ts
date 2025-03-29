@@ -6,9 +6,10 @@ import { Type } from 'class-transformer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Song } from './song.entity';
 import { Artist } from 'src/artists/entities/artist.entity';
+import { Playlist } from 'src/playlists/entities/playlist.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Song, Artist])], // import the song entity aka the repository
+  imports: [TypeOrmModule.forFeature([Song, Artist, Playlist])], // import the song entity aka the repository
   // this will create a repository for the song entity => then inject it into the service
   controllers: [SongsController],
   providers: [SongsService,
