@@ -1,22 +1,22 @@
-import { IsString, IsNotEmpty, IsDateString, IsMilitaryTime } from 'class-validator';
-export class CreateSongDTO{
+import { IsString, IsNotEmpty, IsDateString, IsMilitaryTime, IsOptional } from 'class-validator';
+export class UpdateSongDTO{
     @IsString()
-    @IsNotEmpty()
+    @IsOptional() // không bắt buộc phải có trong request body
     readonly title: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString({each: true})
     readonly artists: string[];
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     readonly album: string;
     
-    @IsNotEmpty()
+    @IsOptional()
     @IsDateString() // chỉ hoạt động với kiểu String
     readonly releasedDate: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsMilitaryTime()
     readonly duration: string;
 

@@ -3,7 +3,7 @@ import { Column, Entity, ObjectIdColumn, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity('songs')
 export class Song{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn() // auto increment id so it is not required to be passed in the request body
     id: number;
     @Column()
     title: string;
@@ -12,10 +12,10 @@ export class Song{
     @Column()
     album: string;
     @Column('date')
-    releasedYear: Date;
+    releasedDate: string;
     @Column('time')
-    duration: Date;
-    @Column('text')
-    @Optional()
-    lyrics: string;
+    duration: string;
+    @Column('text', {nullable: true})
+    // @Optional() //@Optional() là decorator của NestJS, nhưng bạn đang dùng trong Entity của TypeORM, điều này không hợp lệ. 
+    lyrics?: string;
 }
