@@ -6,6 +6,8 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { UpdateSongDTO } from './dto/update-song-dto';
 import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
+import { Artist } from 'src/artists/entities/artist.entity';
+import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
 
 @Injectable()
 export class SongsService {
@@ -15,22 +17,26 @@ export class SongsService {
     // inject the repository here
     @InjectRepository(Song)
     private readonly songRepository: Repository<Song>;
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>; // inject the artist repository
 
 
     async create(songDTO : CreateSongDTO) : Promise<Song> { // dùng async để gọi hàm bất đồng bộ trả await nhưng vẫn là promise
         const song = new Song(); // create a new song object
         song.title = songDTO.title;
-        song.artists = songDTO.artists;
         song.album = songDTO.album;
         song.releasedDate = songDTO.releasedDate;
         song.duration = songDTO.duration;
-        song.lyrics = songDTO.lyrics;
+        song.lyrics = songDTO.lyrics;    
         // save the song to the database
+        const artists = await this.artistRepository.findByIds(songDTO.artists); // create the artists from the DTO
+        song.artists = artists; // set the artists to the song
         return await this.songRepository.save(song); // save the song to the database
     }
 
     async findAll() : Promise<Song[]> { // return a promise of the array of songs
-        return await this.songRepository.find(); // find all songs in the database
+        const songs = await this.songRepository.find({relations: ['artists']}); // find all songs in the database
+        return songs; // return the songs
     }
 
     async findOne(id: number) : Promise<Song | null> { // return a promise of the song

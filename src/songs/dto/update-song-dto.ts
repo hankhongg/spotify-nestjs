@@ -1,12 +1,17 @@
-import { IsString, IsNotEmpty, IsDateString, IsMilitaryTime, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsDateString, IsMilitaryTime, IsOptional, IsNumber } from 'class-validator';
+import { Artist } from 'src/artists/entities/artist.entity';
 export class UpdateSongDTO{
     @IsString()
     @IsOptional() // không bắt buộc phải có trong request body
     readonly title: string;
 
+    // @IsOptional()
+    // @IsString({each: true})
+    // readonly artists: string[];
+
     @IsOptional()
-    @IsString({each: true})
-    readonly artists: string[];
+    @IsNumber({},{each: true})
+    readonly artists: Artist[]; // id của artist, không phải tên artist
 
     @IsOptional()
     @IsString()

@@ -24,6 +24,7 @@ export class SongsController {
     }
 
     // find all
+    /* PAGINATION
     @Get()
     findAll(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1, // default page is 1
@@ -32,6 +33,12 @@ export class SongsController {
         limit = limit > 100 ? 100 : limit; // limit the number of songs to 100
         
         return this.songsService.paginate({page, limit}); // find all songs in the database and paginate them
+    }
+    */
+
+    @Get()
+    findAll() : Promise<Song[]> {
+        return this.songsService.findAll(); // find all songs in the database and return them
     }
 
     //✅ DefaultValuePipe(10) handles NestJS query params properly.

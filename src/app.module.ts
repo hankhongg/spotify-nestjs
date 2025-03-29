@@ -7,12 +7,14 @@ import { SongsController } from './songs/songs.controller';
 import { DevConfigService } from './common/providers/DevConfigService';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
+import { ArtistsModule } from './artists/artists.module';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
 
 @Module({
-  imports: [SongsModule, ConfigModule.forRoot(), DatabaseModule],
+  imports: [SongsModule, ConfigModule.forRoot(), DatabaseModule, UsersModule, ArtistsModule],
   controllers: [AppController],
   providers: [AppService,
     {

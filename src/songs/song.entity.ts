@@ -1,5 +1,6 @@
 import { Optional } from "@nestjs/common";
-import { Column, Entity, ObjectIdColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Artist } from "src/artists/entities/artist.entity";
+import { Column, Entity, JoinTable, ManyToMany, ObjectIdColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('songs')
 export class Song{
@@ -7,8 +8,8 @@ export class Song{
     id: number;
     @Column()
     title: string;
-    @Column('varchar', {array: true})
-    artists: string[];
+    // @Column('varchar', {array: true})
+    // artists: string[];
     @Column()
     album: string;
     @Column('date')
@@ -18,4 +19,8 @@ export class Song{
     @Column('text', {nullable: true})
     // @Optional() //@Optional() là decorator của NestJS, nhưng bạn đang dùng trong Entity của TypeORM, điều này không hợp lệ. 
     lyrics?: string;
+
+    @ManyToMany(() => Artist, (artist) => artist.songs, {cascade: true}) // many to many relationship with artist entity
+    @JoinTable({name: "songs_artists"}) // this will create a join table to store the relationship
+    artists: Artist[]; // this is the foreign key to the artist table
 }

@@ -4,6 +4,8 @@ import {ConfigModule, ConfigService} from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { config } from 'process';
 import { Song } from 'src/songs/song.entity';
+import { Artist } from 'src/artists/entities/artist.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { Song } from 'src/songs/song.entity';
           username: configService.get('DATABASE_USERNAME'),
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE_NAME'),
-          entities: [Song],
+          entities: [Song, Artist, User],
           synchronize: true,
         };
       }
