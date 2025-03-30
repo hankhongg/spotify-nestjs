@@ -2,7 +2,6 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import { DataSource } from 'typeorm';
-import { config } from 'process';
 import { Song } from 'src/songs/song.entity';
 import { Artist } from 'src/artists/entities/artist.entity';
 import { User } from 'src/users/entities/user.entity';

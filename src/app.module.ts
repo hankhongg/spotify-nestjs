@@ -16,7 +16,9 @@ const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
 
 @Module({
-  imports: [SongsModule, ConfigModule.forRoot(), DatabaseModule, UsersModule, ArtistsModule, AuthModule, PlaylistsModule],
+  imports: [SongsModule, ConfigModule.forRoot(
+    {isGlobal: true} // make the config module global
+  ), DatabaseModule, UsersModule, ArtistsModule, AuthModule, PlaylistsModule],
   controllers: [AppController],
   providers: [AppService,
     {
