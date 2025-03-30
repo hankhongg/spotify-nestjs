@@ -7,6 +7,7 @@ import {JwtModule} from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt-strategy';
 import { PassportModule } from '@nestjs/passport';
+import { ArtistsModule } from 'src/artists/artists.module';
 
 @Module({
   imports: [UsersModule, JwtModule.registerAsync({ //wait for the config service to be ready
@@ -16,7 +17,7 @@ import { PassportModule } from '@nestjs/passport';
       secret: configService.get('JWT_SECRET'), // get the secret from the config service
       signOptions: { expiresIn: '1h' }, // set the expiration time for the token
     })
-  }), PassportModule], // import the passport module bc providers: [JwtStrategy] needs it
+  }), PassportModule, ArtistsModule], // import the passport module bc providers: [JwtStrategy] needs it
   providers: [AuthService, JwtStrategy], // register the jwt strategy
   controllers: [AuthController],
   exports: [AuthService], // export the AuthService so it can be used in other modules

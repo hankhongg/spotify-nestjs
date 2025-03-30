@@ -1,4 +1,4 @@
-import { Inject,Controller, Get, Post, Delete, Put, Param, ParseIntPipe, HttpStatus, HttpException, Body, Query, DefaultValuePipe } from '@nestjs/common';
+import { Inject,Controller, Get, Post, Delete, Put, Param, ParseIntPipe, HttpStatus, HttpException, Body, Query, DefaultValuePipe, UseGuards, Request } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import e from 'express';
 import { CreateSongDTO } from './dto/create-song-dto';
@@ -7,6 +7,7 @@ import { Song } from './song.entity';
 import { UpdateSongDTO } from './dto/update-song-dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
+import { JwtArtistGuard } from 'src/auth/jwt-artist-guard';
 
 @Controller('songs')
 export class SongsController {
@@ -18,9 +19,13 @@ export class SongsController {
     
     // create
     @Post()
-    create(@Body() createSongDTO: CreateSongDTO) : Promise<Song> { // use the DTO to validate the data
+    @UseGuards(JwtArtistGuard) // use guards to protect the route
+    create(@Body() createSongDTO: CreateSongDTO, @Request() req) : Promise<Song> { // use the DTO to validate the data
         // nên nếu service của bạn trả về một Promise, thì controller cũng phải trả về Promise để đợi kết quả hoàn thành trước khi phản hồi.
-       return this.songsService.create(createSongDTO); // create a new song and return it
+       
+       console.log(req.user); // log the user to see if the token is valid
+       // req.user là thông tin của người dùng đã được xác thực từ token JWT
+        return this.songsService.create(createSongDTO); // create a new song and return it
     }
 
     // find all
@@ -65,3 +70,5 @@ export class SongsController {
     
 
 }
+
+

@@ -34,7 +34,7 @@ export class ArtistsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} artist`;
+    return this.artistRepository.findOne({where: {id}, relations: ["user"]}); // find one artist by id and include user data
   }
 
   update(id: number, updateArtistDto: UpdateArtistDto) {
