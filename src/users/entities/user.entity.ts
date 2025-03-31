@@ -18,4 +18,9 @@ export class User {
 
     @OneToMany(() => Playlist, (playlist) => playlist.user, { cascade: true })
     playlists: Playlist[]; // this is the relationship with the playlist entity
+
+    @Column({nullable: true, type: 'text'})
+    twoFASecret: string; // this is the two factor authentication secret
+    @Column({default: false, type: 'boolean'})
+    isTwoFAEnabled: boolean; // this is the two factor authentication enabled flag
 }

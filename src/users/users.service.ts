@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs'; // import bcrypt for password hashing
 import { LoginDto } from 'src/auth/dto/login.dto';
@@ -36,6 +36,24 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({email: data.email}); // find the user by id
     if(!user) throw new UnauthorizedException("User not found"); // if not found, throw an error
     return user;
+  }
+
+  async findOneById(id: number) : Promise<User> {
+    const user = await this.userRepository.findOneBy({id}); // find the user by id
+    if(!user) throw new UnauthorizedException("User not found"); // if not found, throw an error
+    return user;
+  }
+
+  f2aUpdate(id: number, secret: string) : Promise<UpdateResult> {
+    const user = this.userRepository.findOneBy({id}); // find the user by id
+    if(!user) throw new UnauthorizedException("User not found"); // if not found, throw an error
+    return this.userRepository.update(id, {twoFASecret: secret, isTwoFAEnabled: true}); // update the user object in the database
+  }
+
+  f2aDisable(id: number) : Promise<UpdateResult> {
+    const user = this.userRepository.findOneBy({id}); // find the user by id
+    if(!user) throw new UnauthorizedException("User not found"); // if not found, throw an error
+    return this.userRepository.update(id, {twoFASecret: "", isTwoFAEnabled: false}); // update the user object in the database
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

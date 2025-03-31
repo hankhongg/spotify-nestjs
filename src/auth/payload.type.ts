@@ -3,3 +3,7 @@ export interface PayLoadType{
     userId: number;
     artistId?: number;
 }
+
+export type Enable2FAType = {
+    secret: string;
+};
