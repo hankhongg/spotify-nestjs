@@ -11,6 +11,8 @@ import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
 import { AuthModule } from './auth/auth.module';
 import { PlaylistsModule } from './playlists/playlists.module';
+import { SeedModule } from './seed/seed.module';
+import { SeedService } from './seed/seed.service';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
@@ -18,7 +20,7 @@ const prodConfig = {port: '500'}
 @Module({
   imports: [SongsModule, ConfigModule.forRoot(
     {isGlobal: true} // make the config module global
-  ), DatabaseModule, UsersModule, ArtistsModule, AuthModule, PlaylistsModule],
+  ), DatabaseModule, UsersModule, ArtistsModule, AuthModule, PlaylistsModule, SeedModule],
   controllers: [AppController],
   providers: [AppService,
     {
@@ -30,8 +32,8 @@ const prodConfig = {port: '500'}
     {
       provide: DevConfigService,
       useClass: DevConfigService, // use Class
-    }
-  ],
+    },
+  SeedService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
