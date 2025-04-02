@@ -21,7 +21,7 @@ import { Playlist } from 'src/playlists/entities/playlist.entity';
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE_NAME'),
           entities: [Song, Artist, User, Playlist],
-          synchronize: true,
+          synchronize: false, // good for production
         };
       }
     })
