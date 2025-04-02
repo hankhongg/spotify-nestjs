@@ -7,6 +7,7 @@ import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth-guard';
 import { ValidateTokenDto } from './dto/validate-token.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -35,5 +36,14 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     validate2fa(@Req() req: any, @Body() validateTokenDto: ValidateTokenDto) : Promise<{verified: boolean}>{
         return this.authService.validate2fa(req.user.userId, validateTokenDto); // validate the 2FA token and return the result
+    }
+    @Get('profile')
+    @UseGuards(AuthGuard('bearer')) // use the api key strategy to protect this route
+    getProfile(@Req() req: any) {
+        req.user.password = ""; // remove the password from the user object
+        return {
+            msg: "Authenticated with API key",
+            user: req.user, // return the user object
+        }
     }
 }

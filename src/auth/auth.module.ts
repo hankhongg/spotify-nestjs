@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt-strategy';
 import { PassportModule } from '@nestjs/passport';
 import { ArtistsModule } from 'src/artists/artists.module';
+import { ApiKeyStrategy } from './api-key-strategy';
 
 @Module({
   imports: [UsersModule, JwtModule.registerAsync({ //wait for the config service to be ready
@@ -18,7 +19,7 @@ import { ArtistsModule } from 'src/artists/artists.module';
       signOptions: { expiresIn: '1h' }, // set the expiration time for the token
     })
   }), PassportModule, ArtistsModule], // import the passport module bc providers: [JwtStrategy] needs it
-  providers: [AuthService, JwtStrategy], // register the jwt strategy
+  providers: [AuthService, JwtStrategy, ApiKeyStrategy], // register the jwt strategy cuz we gonna use it in the auth controller
   controllers: [AuthController],
   exports: [AuthService], // export the AuthService so it can be used in other modules
 })

@@ -92,4 +92,8 @@ export class AuthService {
             throw new UnauthorizedException('User not found'); // If user is not found, throw an error
         }
     }
+
+    async validateApiKey(apiKey: string) : Promise<User | null> {
+        return await this.usersService.findByApiKey(apiKey); // Find the user by api key
+    }
 }

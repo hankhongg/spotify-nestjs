@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 import { Playlist } from "src/playlists/entities/playlist.entity";
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Exclusion, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('users') // this is the name of the table in the database
 export class User {
@@ -23,4 +23,8 @@ export class User {
     twoFASecret: string; // this is the two factor authentication secret
     @Column({default: false, type: 'boolean'})
     isTwoFAEnabled: boolean; // this is the two factor authentication enabled flag
+
+    
+    @Column({nullable: true})
+    apiKey: string;
 }

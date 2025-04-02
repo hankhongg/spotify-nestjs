@@ -6,6 +6,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs'; // import bcrypt for password hashing
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { v4 as uuid4 } from 'uuid'; // import uuid for generating unique ids
 
 @Injectable()
 export class UsersService {
@@ -22,11 +23,22 @@ export class UsersService {
   // }
 
   async create(createUserDto: CreateUserDto) : Promise<User> {
+    const user = new User();
+
+
     const salt = await bcrypt.genSalt(); // generate a salt
-    createUserDto.password = await bcrypt.hash(createUserDto.password, salt); // hash the password with the salt
-    const user = await this.userRepository.save(createUserDto); // create a new user object
-    user.password = ""; // remove the password from the user object
-    return user;
+    user.password = await bcrypt.hash(createUserDto.password, salt); // hash the password with the salt
+
+    user.firstName = createUserDto.firstName; // set the first name
+    user.lastName = createUserDto.lastName; // set the last name
+    user.email = createUserDto.email; // set the email
+  
+    const apiKey = uuid4();
+    user.apiKey = apiKey; // generate a unique api key
+
+    const savedUser = await this.userRepository.save(user); // create a new user object
+    savedUser.password = ""; // remove the password from the user object
+    return savedUser;
   }
   async findAll() : Promise<User[]> { // return a promise of the array of users
     return await this.userRepository.find(); // find all users in the database
@@ -54,6 +66,10 @@ export class UsersService {
     const user = this.userRepository.findOneBy({id}); // find the user by id
     if(!user) throw new UnauthorizedException("User not found"); // if not found, throw an error
     return this.userRepository.update(id, {twoFASecret: "", isTwoFAEnabled: false}); // update the user object in the database
+  }
+
+  findByApiKey(apiKey: string) : Promise<User | null>{
+    return this.userRepository.findOneBy({apiKey});
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
