@@ -1,11 +1,10 @@
-import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, RequestMethod, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SongsModule } from './songs/songs.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { SongsController } from './songs/songs.controller';
 import { DevConfigService } from './common/providers/DevConfigService';
-import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
@@ -13,14 +12,29 @@ import { AuthModule } from './auth/auth.module';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { SeedModule } from './seed/seed.module';
 import { SeedService } from './seed/seed.service';
+import configuration from './config/configuration';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeOrmModuleAsyncOptions } from 'db/data-source';
+import { DataSource } from 'typeorm';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
 
 @Module({
   imports: [SongsModule, ConfigModule.forRoot(
-    {isGlobal: true} // make the config module global
-  ), DatabaseModule, UsersModule, ArtistsModule, AuthModule, PlaylistsModule, SeedModule],
+    {
+      isGlobal: true,
+      envFilePath: ['.env'],
+      load: [configuration]
+    } // make the config module global
+  ), 
+  UsersModule, 
+  ArtistsModule, 
+  AuthModule, 
+  PlaylistsModule, 
+  SeedModule,
+  TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions)
+],
   controllers: [AppController],
   providers: [AppService,
     {
@@ -33,9 +47,11 @@ const prodConfig = {port: '500'}
       provide: DevConfigService,
       useClass: DevConfigService, // use Class
     },
-  SeedService],
+    SeedService],
 })
-export class AppModule {
+export class AppModule implements OnModuleInit {
+  constructor(private readonly dataSource: DataSource) {} // inject the data source
+
   configure(consumer: MiddlewareConsumer) {
     // consumer
     //   .apply(LoggerMiddleware)
@@ -44,6 +60,15 @@ export class AppModule {
     // consumer.apply(LoggerMiddleware).forRoutes({path: "songs", method: RequestMethod.POST}); // opt 2
 
     consumer.apply(LoggerMiddleware).forRoutes(SongsController); // opt 3
+  }
+
+
+  async onModuleInit() {
+    if(this.dataSource.isInitialized) { // check if db is connected
+      console.log('Database connection is already established haha.');
+    } else {
+      console.error('Database connection is NOT established.');
+    }
   }
   
 }
