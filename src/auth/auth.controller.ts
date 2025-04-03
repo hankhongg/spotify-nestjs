@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth-guard';
 import { ValidateTokenDto } from './dto/validate-token.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -48,6 +48,7 @@ export class AuthController {
     }
     
     @Get('profile')
+    @ApiBearerAuth('JWT-auth') // use the JWT auth scheme
     @UseGuards(AuthGuard('bearer')) // use the api key strategy to protect this route
     getProfile(@Req() req: any) {
         req.user.password = ""; // remove the password from the user object
