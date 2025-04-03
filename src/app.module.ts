@@ -16,6 +16,7 @@ import configuration from './config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleAsyncOptions } from 'db/data-source';
 import { DataSource } from 'typeorm';
+import * as joi from 'joi';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
@@ -25,7 +26,15 @@ const prodConfig = {port: '500'}
     {
       isGlobal: true,
       envFilePath: ['.env'],
-      load: [configuration]
+      load: [configuration],
+      validationSchema: {
+        DB_HOST: joi.string().required(),
+        DB_PORT: joi.number().default(5432),
+        DB_USERNAME: joi.string().required(),
+        DB_PASSWORD: joi.string().required(),
+        DB_DATABASE: joi.string().required(),
+        JWT_SECRET: joi.string().required(),
+      }
     } // make the config module global
   ), 
   UsersModule, 
