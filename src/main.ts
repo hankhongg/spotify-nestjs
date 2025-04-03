@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { SeedService } from './seed/seed.service';
 import { ConfigService } from '@nestjs/config';
 
+declare const module: any; // for hot reload
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
@@ -17,5 +19,11 @@ async function bootstrap() {
   const port = configService.get<number>('port');
 
   await app.listen(port ?? 3000);
+
+  // enable hot reload for development mode
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 }
 bootstrap();
