@@ -27,14 +27,14 @@ const prodConfig = {port: '500'}
       isGlobal: true,
       envFilePath: ['.env'],
       load: [configuration],
-      validationSchema: {
-        DB_HOST: joi.string().required(),
-        DB_PORT: joi.number().default(5432),
-        DB_USERNAME: joi.string().required(),
-        DB_PASSWORD: joi.string().required(),
-        DB_DATABASE: joi.string().required(),
+      validationSchema: joi.object({
+        DATABASE_HOST: joi.string().required(),
+        DATABASE_PORT: joi.number().default(5432),
+        DATABASE_USERNAME: joi.string().required(),
+        DATABASE_PASSWORD: joi.string().required(),
+        DATABASE_NAME: joi.string().required(),
         JWT_SECRET: joi.string().required(),
-      }
+      })
     } // make the config module global
   ), 
   UsersModule, 
