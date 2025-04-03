@@ -1,10 +1,14 @@
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModuleAsyncOptions } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
+import { Artist } from "src/artists/entities/artist.entity";
+import { Playlist } from "src/playlists/entities/playlist.entity";
+import { Song } from "src/songs/song.entity";
+import { User } from "src/users/entities/user.entity";
 import { DataSource, DataSourceOptions } from "typeorm";
 
 dotenv.config();
-
+// typeorm does not work correctly with webpack, so we need to use the exact entity names here
 export const typeOrmModuleAsyncOptions: TypeOrmModuleAsyncOptions = {
     imports: [ConfigModule.forRoot()], // load config module
     inject: [ConfigService], // use config service
@@ -16,7 +20,7 @@ export const typeOrmModuleAsyncOptions: TypeOrmModuleAsyncOptions = {
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: ["dist/**/*.entity.js"],
+        entities: [Artist, User, Playlist, Song],
         migrations: ["dist/db/migrations/*.js"],
         synchronize: false, // good for production
     };
