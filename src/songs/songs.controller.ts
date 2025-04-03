@@ -8,8 +8,11 @@ import { UpdateSongDTO } from './dto/update-song-dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import { JwtArtistGuard } from 'src/auth/jwt-artist-guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('songs')
+@ApiBearerAuth('JWT-auth') // use the JWT auth scheme
+@UseGuards(JwtArtistGuard) // use the api key strategy to protect this route
 export class SongsController {
     constructor(private songsService: SongsService,
         @Inject('CONNECTION') private connection: Connection,

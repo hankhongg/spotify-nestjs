@@ -22,6 +22,8 @@ export class AuthController {
         return this.usersService.create(createUserDTO); // create a new user and return it
     }
     
+    @ApiOperation({ summary: 'Login a user' }) // operation aka guiding
+    @ApiResponse({ status: 200, description: 'User logged in successfully'}) // response for the operation
     @Post('login')
     async login(@Body() loginDto: LoginDto) {
         const user = this.authService.login(loginDto); // login the user and return the user
@@ -30,24 +32,27 @@ export class AuthController {
     }
     
     @Get('enable2fa')
+    @ApiBearerAuth('JWT-auth') // use the JWT auth scheme
     @UseGuards(JwtAuthGuard)
     enable2FA(@Req() req: any) {
         return this.authService.enable2FA(req.user.userId); // enable 2FA for the user and return the secret
     }
     
     @Get('disable2fa')
+    @ApiBearerAuth('JWT-auth') // use the JWT auth scheme
     @UseGuards(JwtAuthGuard)
     disable2FA(@Req() req: any){
        return this.authService.disable2FA(req.user.userId); // disable 2FA for the user and return the secret 
     }
     
     @Post('validate2fa')
+    @ApiBearerAuth('JWT-auth') // use the JWT auth scheme
     @UseGuards(JwtAuthGuard)
     validate2fa(@Req() req: any, @Body() validateTokenDto: ValidateTokenDto) : Promise<{verified: boolean}>{
         return this.authService.validate2fa(req.user.userId, validateTokenDto); // validate the 2FA token and return the result
     }
     
-    @Get('profile')
+    @Get('profile-api-key')
     @ApiBearerAuth('JWT-auth') // use the JWT auth scheme
     @UseGuards(AuthGuard('bearer')) // use the api key strategy to protect this route
     getProfile(@Req() req: any) {
