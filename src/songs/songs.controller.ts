@@ -12,7 +12,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('songs')
 @ApiBearerAuth('JWT-auth') // use the JWT auth scheme
-@UseGuards(JwtArtistGuard) // use the api key strategy to protect this route
+//@UseGuards(JwtArtistGuard) // use the api key strategy to protect this route
 export class SongsController {
     constructor(private songsService: SongsService,
         @Inject('CONNECTION') private connection: Connection,
@@ -52,11 +52,20 @@ export class SongsController {
     //✅ DefaultValuePipe(10) handles NestJS query params properly.
     //✅ = 10 ensures TypeScript doesn't complain about missing values in non-NestJS contexts.
 
+    @Get('search')
+    search(@Query('q') query: string) : Promise<Song[]> { // search for songs by query
+        return this.songsService.search(query); // find the song by query
+    }
+
+
     // find one
     @Get(':id')
     findOne(@Param('id', new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) id: number) : Promise<Song | null> {
        return this.songsService.findOne(id); // find the song by id
+
     }
+
+
 
     // update
     @Put(':id') // cần @Param để lấy id từ url

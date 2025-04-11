@@ -2,6 +2,9 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SpotifyApiService } from './spotify-api/spotify-api.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Song } from 'src/songs/song.entity';
+import { Artist } from 'src/artists/entities/artist.entity';
 
 @Module({
     imports: [ConfigModule,
@@ -16,7 +19,9 @@ import { SpotifyApiService } from './spotify-api/spotify-api.service';
                 }
             })
         }),
+        TypeOrmModule.forFeature([Song, Artist]),
     ],
     providers: [SpotifyApiService],
+    exports: [SpotifyApiService], // export the service so it can be used in other modules
 })
 export class ExternalApisModule {}

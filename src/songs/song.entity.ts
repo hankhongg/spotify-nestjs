@@ -14,9 +14,9 @@ export class Song{
     // artists: string[];
     @Column()
     album: string;
-    @Column('date')
+    @Column('date', {nullable: true})
     releasedDate: string;
-    @Column('time')
+    @Column('time', {nullable: true})
     duration: string;
     @Column('text', {nullable: true})
     // @Optional() //@Optional() là decorator của NestJS, nhưng bạn đang dùng trong Entity của TypeORM, điều này không hợp lệ. 

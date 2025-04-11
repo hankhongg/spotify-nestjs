@@ -9,12 +9,13 @@ import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginat
 import { Artist } from 'src/artists/entities/artist.entity';
 import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
 import { Playlist } from 'src/playlists/entities/playlist.entity';
+import { SpotifyApiService } from 'external-apis/spotify-api/spotify-api.service';
 
 @Injectable()
 export class SongsService {
     // local db
     // local array
-
+    constructor(private spotifyApiService : SpotifyApiService){}
     // inject the repository here
     @InjectRepository(Song)
     private readonly songRepository: Repository<Song>;
@@ -63,6 +64,19 @@ export class SongsService {
 
     async delete(id: number): Promise<DeleteResult> { // return a promise of the delete result
        return await this.songRepository.delete(id); // delete the song from the database
+    }
+
+    async search(query: string) : Promise<Song[]> {
+        if(!query) return []; // if no query, return empty array
+        const song = await this.songRepository.findOneBy({title: query}); // find the song by title
+        if(!song){
+            // call the spotify api to search for the song
+            const spotifySong = await this.spotifyApiService.searchSongs(query);
+            return this.songRepository.save(spotifySong); // save the song to the database and return it
+        }
+        else {
+            return [song]; // if found, return the song
+        }
     }
 
     paginate(options: IPaginationOptions) : Promise<Pagination<Song>>{

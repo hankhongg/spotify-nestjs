@@ -22,7 +22,7 @@ export const typeOrmModuleAsyncOptions: TypeOrmModuleAsyncOptions = {
         database: configService.get('DATABASE_NAME'),
         entities: [Artist, User, Playlist, Song],
         migrations: ["dist/db/migrations/*.js"],
-        synchronize: false, // good for production
+        synchronize: true, // good for production
     };
     }
 }
