@@ -17,6 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleAsyncOptions } from 'db/data-source';
 import { DataSource } from 'typeorm';
 import * as joi from 'joi';
+import { ExternalApisModule } from 'external-apis/external-apis.module';
 
 const devConfig = {port: '400'}
 const prodConfig = {port: '500'}
@@ -42,7 +43,8 @@ const prodConfig = {port: '500'}
   AuthModule, 
   PlaylistsModule, 
   SeedModule,
-  TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions)
+  TypeOrmModule.forRootAsync(typeOrmModuleAsyncOptions),
+  ExternalApisModule
 ],
   controllers: [AppController],
   providers: [AppService,
