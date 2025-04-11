@@ -1,3 +1,20 @@
+## .env file
+``` env
+# DATABASE_URL=mongodb://admin:123456@localhost:27017/spotifyDb?authSource=admin
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=spotify-db
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=135792468
+
+JWT_SECRET=ac8d2f85-81ff-4734-b078-5f25e3ae4041
+
+SPOTIFY_CLIENT_ID=eeb46a1a532444afa266511a8acec1b6
+SPOTIFY_CLIENT_SECRET=a93a23bcfd0549cfb29df032e384580b
+
+```
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
