@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { create } from 'domain';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -10,6 +10,8 @@ import { ValidateTokenDto } from './dto/validate-token.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RefreshGuard } from './guards/refresh-guard/refresh-guard';
+import { GoogleGuard } from './guards/google-guard/google-guard';
+import { PayLoadType } from './dto/payload.type';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -68,5 +70,31 @@ export class AuthController {
     @UseGuards(RefreshGuard) 
     refreshToken(@Req() req : any){
         return this.authService.refreshToken(req.user); // refresh the token and return the new token
+    }
+
+    @UseGuards(GoogleGuard)
+    @Get('google/login')
+    googleLogin(){ }
+
+    @UseGuards(GoogleGuard)
+    @Get('google/callback')
+    async googleCallback(@Req() req: any, @Res() res : any){
+        const user = req.user;
+        const payload : PayLoadType = {
+            email:  user.email,
+            userId: user.id,
+            artistId: user.artistId,
+        }
+        const accessToken = await this.authService.signAccessToken(payload); // sign the access token
+        const refreshToken = await this.authService.signRefreshToken(payload); // sign the refresh token
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true, // make the cookie http only
+            secure: true, // make the cookie secure
+            sameSite: 'strict', // make the cookie same site
+            maxAge: 1 * 24 * 60 * 60 * 1000, // set the cookie to expire in 1 days
+        });
+
+        res.redirect('http://localhost:3000/auth/google/redirect?accessToken=' + accessToken); // redirect to the frontend with the access token
     }
 }

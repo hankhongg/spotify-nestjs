@@ -109,4 +109,12 @@ export class AuthService {
             accessToken: this.jwtService.sign(payload, {expiresIn: '60s'}), // Sign the payload to create a JWT token
         }
     }
+
+    async signRefreshToken(payload: PayLoadType) : Promise<string> {
+        return this.jwtService.sign(payload, {expiresIn: '1d', secret: this.configService.get<string>('REFRESH_JWT_SECRET')}); // Sign the payload to create a refresh token with an expiration time of 7 days
+    }
+
+    async signAccessToken(payload: PayLoadType) : Promise<string> {
+        return this.jwtService.sign(payload, {expiresIn: '60s'}); // Sign the payload to create a JWT token
+    }
 }

@@ -10,6 +10,7 @@ import { ArtistsModule } from 'src/artists/artists.module';
 import { ApiKeyStrategy } from 'src/auth/strategies/api-key-strategy';
 import { AuthService } from './auth.service';
 import { RefreshJwtStrategy } from './strategies/refresh-jwt-strategy';
+import { GoogleStrategy } from './strategies/google-strategy';
 
 @Module({
   imports: [UsersModule, JwtModule.registerAsync({ //wait for the config service to be ready
@@ -20,7 +21,7 @@ import { RefreshJwtStrategy } from './strategies/refresh-jwt-strategy';
       signOptions: { expiresIn: '1h' }, // set the expiration time for the token
     })
   }), PassportModule, ArtistsModule], // import the passport module bc providers: [JwtStrategy] needs it
-  providers: [AuthService, JwtStrategy, ApiKeyStrategy, RefreshJwtStrategy], // register the jwt strategy cuz we gonna use it in the auth controller
+  providers: [AuthService, JwtStrategy, ApiKeyStrategy, RefreshJwtStrategy, GoogleStrategy], // register the jwt strategy cuz we gonna use it in the auth controller
   controllers: [AuthController],
   exports: [AuthService], // export the AuthService so it can be used in other modules
 })

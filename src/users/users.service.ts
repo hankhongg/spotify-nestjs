@@ -72,6 +72,16 @@ export class UsersService {
     return this.userRepository.findOneBy({apiKey});
   }
 
+
+  async validateGoogleLogin(googleUser: CreateUserDto) : Promise<User | null> {
+    const user = await this.userRepository.findOneBy({email: googleUser.email}); // find the user by email
+    if(!user) { // if not found, create a new user
+      return this.create(googleUser); // create a new user and return it
+    } else {
+      return user; // return the user if found
+    }
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }

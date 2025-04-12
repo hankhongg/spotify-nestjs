@@ -17,5 +17,6 @@ export class CreateUserDto {
     password: string;
 
     @Column()
-    readonly apiKey: string; // this is the api key for the user
+    @IsOptional()
+    readonly apiKey?: string; // this is the api key for the user
 }
