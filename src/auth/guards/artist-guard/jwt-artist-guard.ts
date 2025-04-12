@@ -1,7 +1,7 @@
 import { ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Observable } from "rxjs";
-import { PayLoadType } from "./payload.type";
+import { PayLoadType } from "src/auth/dto/payload.type";
 
 @Injectable()
 export class JwtArtistGuard extends AuthGuard('jwt') {

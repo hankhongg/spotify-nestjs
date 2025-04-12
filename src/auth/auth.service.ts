@@ -7,15 +7,16 @@ import * as bcrypt from 'bcryptjs'; // Import bcrypt for password hashing and co
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ArtistsService } from 'src/artists/artists.service';
-import { Enable2FAType, PayLoadType } from './payload.type';
+import { Enable2FAType, PayLoadType } from './dto/payload.type';
 import * as speakeasy from 'speakeasy'; // Import speakeasy for 2FA
+import { ConfigService } from '@nestjs/config';
 
 // This service will handle authentication logic, such as validating users and generating JWT tokens.
 @Injectable()
 export class AuthService {
-    constructor(private usersService: UsersService, private jwtService: JwtService, private artistsService : ArtistsService) {} // inject the users service
+    constructor(private usersService: UsersService, private configService: ConfigService  ,private jwtService: JwtService, private artistsService : ArtistsService) {} // inject the users service
     
-    async login(loginDto: LoginDto) : Promise<{accessToken: string} | {validate2fa: string, message: string}> { // tạm thời trả về một user
+    async login(loginDto: LoginDto) : Promise<{accessToken: string, refreshToken: string} | {validate2fa: string, message: string}> { // tạm thời trả về một user
         // remember to install nestjs/jwt and @nestjs/passport
         // and import JwtModule in the auth module
 
@@ -48,7 +49,8 @@ export class AuthService {
                 payload.artistId = artist.id; // If artist is found, add the artist id to the payload
             }
             return{
-                accessToken: this.jwtService.sign(payload), // Sign the payload to create a JWT token
+                accessToken: this.jwtService.sign(payload, {expiresIn: '60s'}), // Sign the payload to create a JWT token
+                refreshToken: this.jwtService.sign(payload, { secret:this.configService.get<string>('REFRESH_JWT_SECRET') ,expiresIn: '1h' }), // Sign the payload to create a refresh token with an expiration time of 7 days
             }
         }
          // Return the found user
@@ -95,5 +97,16 @@ export class AuthService {
 
     async validateApiKey(apiKey: string) : Promise<User | null> {
         return await this.usersService.findByApiKey(apiKey); // Find the user by api key
+    }
+
+    async refreshToken(user: User): Promise<{ accessToken: string}> {
+        const payload: PayLoadType = { email: user.email, userId: user.id }; // Create a payload for the JWT token
+        const artist = await this.artistsService.findOne(user.id); // Find the artist by user id
+        if (artist){
+            payload.artistId = artist.id; // If artist is found, add the artist id to the payload
+        }
+        return {
+            accessToken: this.jwtService.sign(payload, {expiresIn: '60s'}), // Sign the payload to create a JWT token
+        }
     }
 }

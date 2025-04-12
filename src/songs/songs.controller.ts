@@ -7,7 +7,7 @@ import { Song } from './song.entity';
 import { UpdateSongDTO } from './dto/update-song-dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
-import { JwtArtistGuard } from 'src/auth/jwt-artist-guard';
+import { JwtArtistGuard } from 'src/auth/guards/artist-guard/jwt-artist-guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('songs')

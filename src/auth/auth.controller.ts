@@ -5,10 +5,11 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth-guard';
+import { JwtAuthGuard } from './guards/auth-guard/jwt-auth-guard';
 import { ValidateTokenDto } from './dto/validate-token.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RefreshGuard } from './guards/refresh-guard/refresh-guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -61,5 +62,11 @@ export class AuthController {
             msg: "Authenticated with API key",
             user: req.user, // return the user object
         }
+    }
+
+    @Get('refresh')
+    @UseGuards(RefreshGuard) 
+    refreshToken(@Req() req : any){
+        return this.authService.refreshToken(req.user); // refresh the token and return the new token
     }
 }
